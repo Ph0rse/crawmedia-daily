@@ -1,0 +1,33 @@
+# 环境与密钥
+.env
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# 媒体文件（视频 / 图片）
+*.mp4
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+
+# 数据库
+*.db
+*.sqlite
+*.sqlite3
+
+# Node.js
+node_modules/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 产出数据（每日运行自动生成，不入版本库）
+data/daily/
+data/long_videos/
+data/patterns/

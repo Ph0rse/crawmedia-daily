@@ -1,0 +1,108 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  CrawMedia Daily — 每日自媒体内容自动生成配置
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 赛道配置
+niche:
+  name: "萌宠"
+  keywords:
+    - "猫咪"
+    - "狗狗"
+    - "宠物"
+    - "萌宠"
+    - "铲屎官"
+    - "猫猫"
+    - "狗子"
+  platform: "douyin"
+
+# 采集配置
+scout:
+  douyin:
+    fetch_limit: 50          # 抖音热榜抓取条数
+    top_n: 20                # 取 Top N 条
+  ranking:
+    # 爆款评分公式权重: score = (likes * w_likes + collects * w_collects + comments * w_comments) / age_days
+    weights:
+      likes: 1
+      collects: 2
+      comments: 3
+
+# 时间表
+schedule:
+  scout_time: "06:00"        # 采集时间
+  analyze_time: "06:30"      # 分析时间
+  remix_time: "07:00"        # 创意组合时间
+  generate_time: "08:00"     # 内容生成时间
+  approval_deadline: "17:30" # 审批截止
+  publish_time: "18:00"      # 发布时间
+  timezone: "Asia/Shanghai"
+
+# 分析配置
+analyze:
+  max_items: 5                # 最多分析的爆款条数（10条火山引擎易超时，5条更稳定）
+
+# 创意组合配置
+remix:
+  strategies:                  # 启用的策略（注释掉则执行全部）
+    - "combine"
+    - "generalize"
+    - "transfer"
+    - "extend"
+
+# 火山引擎模型
+# 视频: doubao-seedance-1-5-pro（最佳，支持有声视频）
+# 图片: doubao-seedream-5-0（最新，解析复杂指令能力最强）
+volcengine:
+  video_model: "doubao-seedance-1-5-pro-251215"
+  image_model: "doubao-seedream-5-0-260128"
+
+# 内容生成配置
+generate:
+  video_ratio: "9:16"          # 短视频竖屏
+  video_resolution: "720p"     # 720p 性价比最优，正式发布可改 1080p
+  generate_audio: true         # 生成同步音效（仅 1.5-pro 支持）
+  poll_interval: 10            # 轮询间隔（秒）
+  poll_timeout: 600            # 最大等待时间（秒）
+  max_concurrent: 2            # 最大并发生成数
+
+  # 生成模式: default / draft / flex
+  #   default — 标准模式，提交后数分钟出结果
+  #   draft   — 先生成 480p 样片快速预览，自动升级为高清成片（省费用、成功率更高）
+  #   flex    — 离线推理模式，成本更低但耗时更长，适合批量非紧急任务
+  mode: "default"
+
+  # 后处理配置
+  post_process:
+    enabled: true              # 是否启用后处理
+    fade_in: 0.3               # 淡入时长（秒），0 = 不加
+    fade_out: 0.3              # 淡出时长（秒），0 = 不加
+    extract_cover: true        # 从视频截取封面图（ffmpeg 截帧）
+    cover_timestamp: 1.0       # 封面截取时间点（秒）
+    auto_subtitle: true        # 自动从创意结构生成字幕
+
+# 飞书通知
+feishu:
+  webhook_url: "${FEISHU_WEBHOOK_URL}"
+  secret: "${FEISHU_SECRET}"
+
+# 发布配置
+publish:
+  # 发布超时时间（秒/每条内容）；正式点击「发布」含视频处理与轮询，建议 ≥ 240
+  timeout_per_item: 300
+  # 预览模式：true = 只填写表单不点发布按钮（调试用）
+  preview_mode: false
+  # manifest 临时目录
+  manifest_dir: "/tmp/crawmedia"
+
+# 内容输出
+output:
+  daily_count: 3             # 每天生成 3 条内容
+  platforms:                 # 目标发布平台
+    - "douyin"
+    - "xiaohongshu"
+  data_dir: "./data"         # 数据存储目录
+
+# 日志
+logging:
+  level: "INFO"
+  file: "./data/crawmedia.log"
